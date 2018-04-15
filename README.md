@@ -1,3 +1,23 @@
+<h3>How to use</h3>
+<p>Edit mydb.php and update database credentials</p>
+
+```html
+	const DBHOST = 'localhost';
+	const DBNAME = 'test';
+	const DBUSER = 'root';
+	const DBPASS = '';
+```	
+
+<p>Test your first query result</p>
+
+```html
+<?php
+	include 'mydb.php'
+	$db = new DB();
+	$results = $db->table('table_name')->select('*')->results();
+	print_r($results);
+?>
+```
 <h3>select</h3>
 <p>returns rows object on success / false on failure or no result</p>
 
