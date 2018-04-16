@@ -68,7 +68,7 @@ $db->table('table_name')->insert(
 		'column1' => 'value 1',
 		'column2' => 'value 2',
 	)
-)->rows();
+)->insertId();
 ```
 
 <h3>select</h3>
