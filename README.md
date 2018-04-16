@@ -42,7 +42,7 @@ $db->table('table_name')->select(
 <p>returns number of affected rows on success</p>
 
 ```html
-$db->table('table_name')->;update(
+$db->table('table_name')->update(
 	array(
 		'column1' => 'new value 1',
 		'column2' => 'new value 2',
