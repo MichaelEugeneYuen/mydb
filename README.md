@@ -93,95 +93,29 @@ $db->table('table_name')->select('column1')->whereIns(
 		['column2','value 3,value 4'],
 	)
 )->results();
+```
+<h3>where not in</h3>
 
+```html
 $db->table('table_name')->select('column1')->whereNotIns(
 	array(
 		['column1','value 1,value 2'],
 		['column2','value 3,value 4'],
 	)
 )->results();
+```
+<h3>where between</h3>
 
+```html
 $db->table('table_name')->select('column2')->whereBetweens(
 		['column1','value 1,value 2'],
 		['column2','value 3,value 4'],
 	)
 )->results();
-
-$db->table('table_name')->select('column2')->whereOrs(
-	array(
-		['column1','=','value 1'],
-		['column2','>','value 2'],
-		['column3','<','value 3'],
-		['column4','>=','value 4'],
-		['column5','<=','value 5'],
-		['column6','LIKE','%value 6%'],
-	)
-)->results();
 ```
-
-<h3>combine where conditions</h3>
+<h3>where or</h3>
 
 ```html
-$db->table('table_name')->select('column1,column2')->whereCols(
-	array(
-		['column1','=','value 1'],
-		['column2','>','value 2'],
-		['column3','<','value 3'],
-		['column4','>=','value 4'],
-		['column5','<=','value 5'],
-		['column6','LIKE','%value 6%'],
-	)
-)->whereIns(
-	array(
-		['column1','value 1,value 2'],
-		['column2','value 3,value 4'],
-	)
-)->whereBetweens(
-	array(
-		['column1','value 1,value 2'],
-		['column2','value 3,value 4'],
-	)
-)->options(
-	'ORDER by column1 DESC, column2 ASC, LIMIT 10'
-)->results();
-```
-
-<h3>delete</h3>
-<p>returns number of affected rows on success</p>
-
-```html
-$db->table('table_name')->delete()->wheres(
-	array(
-		['column1','=','value 1'],
-		['column2','=','value 2'],
-	)
-)->rows();
-```
-
-<h3>Other where conditions</h3>
-<h3>where in</h3>
-
-```html
-$db->table('table_name')->select('column1')->whereIns(
-	array(
-		['column1','value 1,value 2'],
-		['column2','value 3,value 4'],
-	)
-)->results();
-
-$db->table('table_name')->select('column1')->whereNotIns(
-	array(
-		['column1','value 1,value 2'],
-		['column2','value 3,value 4'],
-	)
-)->results();
-
-$db->table('table_name')->select('column2')->whereBetweens(
-		['column1','value 1,value 2'],
-		['column2','value 3,value 4'],
-	)
-)->results();
-
 $db->table('table_name')->select('column2')->whereOrs(
 	array(
 		['column1','=','value 1'],
