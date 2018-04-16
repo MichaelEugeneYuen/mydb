@@ -182,7 +182,7 @@ $db->table(
 )->check();
 ```
 
-<p>This will return mysql statement, values and statment errors in array</p>
+<p>This will return mysql statement, values and statement errors in array</p>
 
 ```html
 Array
