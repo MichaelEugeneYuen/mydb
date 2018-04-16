@@ -30,9 +30,9 @@ $db->table('table_name')->select(
 	array(
 		['column1','=','value 1'],
 		['column2','>','value 2'],
-		['column3','&#60;','value 3'],
+		['column3','<','value 3'],
 		['column4','>=','value 4'],
-		['column5','&#60;=','value 5'],
+		['column5','<=','value 5'],
 		['column6','LIKE,'%value 6%'],
   )
 )->results();
