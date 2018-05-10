@@ -223,7 +223,7 @@ class DB {
 		$action = implode(' ',$this->_parts->_action);
 		$params = $this->_params();
 		$options = (!empty($this->_options))? ' ' . $this->_options: '';
-		$operator = ($this->_parts->_whereCondition == true && !empty($params))? ' WHERE (' : ' ';
+		$operator = ($this->_parts->_whereCondition == true && !empty($params))? ' WHERE ' : ' ';
 		$sql = "{$action}{$operator}{$params}{$options}";
 		$values = ($this->_parts->_values)? $this->_parts->_values : [];
 		$this->_parts = null;
