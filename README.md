@@ -187,7 +187,7 @@ $db->table(
 ```html
 Array
 (
-	[0] => SELECT column1,column2 FROM table_name WHERE column1 LIKE ? AND (id IN (?,?,?)) AND (column2 BETWEEN  ? AND ?)) OR (column2 = ?)
+	[0] => SELECT column1,column2 FROM table_name WHERE column1 LIKE ? AND (id IN (?,?,?)) AND (column2 BETWEEN  ? AND ?) OR (column2 = ?)
 	[1] => Array
 		(
 			[0] => %value1%
