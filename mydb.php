@@ -5,11 +5,12 @@ class DB {
 	const DBUSER = 'root';
 	const DBPASS = '';
 	
+	
 	private $_parts,
-					$_error,
-					$_query,
-					$_params,
-					$_count;
+		$_error,
+		$_query,
+		$_params,
+		$_count;
 
 	public function __construct() {
 		try {
@@ -24,7 +25,7 @@ class DB {
 
 	public static function getInstance() {
 		if (!ISSET(self::$_instance)) {
-			self::$_instance = new db();
+			self::$_instance = new DB;
 		}
 		return self::$_instance;
 	}
@@ -66,6 +67,7 @@ class DB {
 	}
 
 	private function _setValues($array, $operators) {
+		$placeHolders = [];
 		foreach ($array as $arr) {
 			if (count($arr) === 3) {
 				$field		= $arr[0];
@@ -96,7 +98,7 @@ class DB {
 
 	public function whereCols($array = []) {
 		$w = '';
-		$operators = array('=','>','<','>=','<=','LIKE');
+		$operators = array('=','>','<','>=','<=','LIKE','REGEXP');
 		if (!EMPTY($array)) {
 			$placeHolders = $this->_setValues($array, $operators);
 			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'AND ' . implode(' AND ', $placeHolders) : implode(' AND ', $placeHolders);
@@ -108,10 +110,10 @@ class DB {
 	
 	public function whereOrs($array = []) {
 		$w = '';
-		$operators = array('=','>','<','>=','<=','LIKE');
+		$operators = array('=','>','<','>=','<=','LIKE','REGEXP');
 		if (!EMPTY($array)) {
 			$placeHolders = $this->_setValues($array, $operators);
-			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? ') OR (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
+			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'OR (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
 		} else {
 			$this->_parts->_wheres[] = '';
 		}
@@ -224,7 +226,7 @@ class DB {
 		$params = $this->_params();
 		$options = (!empty($this->_options))? ' ' . $this->_options: '';
 		$operator = ($this->_parts->_whereCondition == true && !empty($params))? ' WHERE ' : ' ';
-		$sql = "{$action}{$operator}{$params}{$options}";
+		$sql = "{$action}{$operator}{$params}{$options} ";
 		$values = ($this->_parts->_values)? $this->_parts->_values : [];
 		$this->_parts = null;
 		return [$sql,$values,$errors];
