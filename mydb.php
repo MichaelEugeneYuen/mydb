@@ -224,7 +224,7 @@ class DB {
 		ksort($this->_parts->_action);			
 		$action = implode(' ',$this->_parts->_action);
 		$params = $this->_params();
-		$options = (!empty($this->_options))? ' ' . $this->_options: '';
+		$options = (!empty($this->_parts->_options))? ' ' . $this->_parts->_options: '';
 		$operator = ($this->_parts->_whereCondition == true && !empty($params))? ' WHERE ' : ' ';
 		$sql = "{$action}{$operator}{$params}{$options} ";
 		$values = ($this->_parts->_values)? $this->_parts->_values : [];
