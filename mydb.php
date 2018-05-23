@@ -5,19 +5,21 @@ class DB {
 	const DBUSER = 'root';
 	const DBPASS = '';
 	
-	
-	private $_parts,
-		$_error,
-		$_query,
-		$_params,
-		$_count;
+	private $_debug = true,
+			$_parts,
+			$_error,
+			$_query,
+			$_params,
+			$_count,
+			$_stmt;
 
 	public function __construct() {
 		try {
 			$this->_pdo = new PDO(
 				"mysql:host=" . self::DBHOST . ";dbname=".self::DBNAME, self::DBUSER, self::DBPASS,
-				array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::ATTR_EMULATE_PREPARES => false)
+				array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::ATTR_EMULATE_PREPARES => false,)
 			);
+			if ($this->_debug) { $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); }
 		} catch(PDOException $e) {
 			die($e->getMessage());
 		}
@@ -35,30 +37,38 @@ class DB {
 		if (empty($errors)) {
 			$this->_results = null;
 			$this->_error = false;
-			$this->_query = $this->_pdo->prepare($sql);
+			try {
+				$this->_stmt = $this->_pdo->prepare($sql);
+			} catch(PDOException $e) {
+				die($e->getMessage());
+			}
 			$i = 1;
+			foreach ($params as $key => $param) {
+				$params[$key] = $param;
+			}
+			// var_dump($params);
 			if (count($params)) {
 				foreach($params as $param) {
-					$this->_query->bindValue($i, $param);
+					$this->_stmt->bindValue($i, $param);
 					$i++;
 				}
 				$this->_params = implode(',',$params);
 			}
-			if ($this->_query->execute()) {
-				if ($rowset = $this->_query->fetchAll(PDO::FETCH_OBJ)) {
-					$this->_results = $rowset;					
+			// var_dump($this->_query);
+			try {
+				$this->_stmt->execute();
+			} catch(PDOException $e){
+				die($e->getMessage());
+			}
+			$this->_count = $this->_stmt->rowCount();
+			if ($rowset = $this->_stmt->fetchAll(PDO::FETCH_OBJ)) {
+				$this->_results = $rowset;					
+			}
+			WHILE($this->_stmt->nextRowset()) {
+				$rowset = $this->_stmt->fetchAll(PDO::FETCH_OBJ);
+				if ($rowset) {
+					$this->_results = $rowset;
 				}
-				WHILE($this->_query->nextRowset()) {
-					$rowset = $this->_query->fetchAll(PDO::FETCH_OBJ);
-					if ($rowset) {
-						$this->_results = $rowset;
-					}
-				}
-				$this->_count = $this->_query->rowCount();
-			} else {
-				/* only for development stage */
-				// die($sql);
-				$this->_error = $this->_query->errorInfo();
 			}
 			return $this;			
 		} else {
@@ -198,6 +208,22 @@ class DB {
 		return $this;	
 	}
 	
+	public function limits(array $limit) {
+		if (isset($limit[0])) {
+			$v[] = $limit[0];
+			$limits[] = "LIMIT ?";
+		}
+		
+		if (isset($limit[1])) {
+			$v[] = $limit[1];
+			$limits[] = "OFFSET ?";
+		}
+		
+		$this->_parts->_limits = implode(' ', $limits);
+		$this->_parts->_values = array_merge($this->_parts->_values, $v);
+		return $this;
+	}
+	
 	public function insert($fields) {
 		$this->_parts->_whereCondition = false;
 		$keys = array_keys($fields);
@@ -225,8 +251,9 @@ class DB {
 		$action = implode(' ',$this->_parts->_action);
 		$params = $this->_params();
 		$options = (!empty($this->_parts->_options))? ' ' . $this->_parts->_options: '';
+		$limits = (!empty($this->_parts->_limits))? ' ' . $this->_parts->_limits: '';
 		$operator = ($this->_parts->_whereCondition == true && !empty($params))? ' WHERE ' : ' ';
-		$sql = "{$action}{$operator}{$params}{$options} ";
+		$sql = "{$action}{$operator}{$params}{$options}{$limits} ";
 		$values = ($this->_parts->_values)? $this->_parts->_values : [];
 		$this->_parts = null;
 		return [$sql,$values,$errors];
@@ -264,3 +291,4 @@ class DB {
 		return false;
 	}
 }
+?>
