@@ -75,7 +75,7 @@ $db->table('table_name')->insert(
 <p>returns number of affected rows on success</p>
 
 ```html
-$db->table('table_name')->delete()->wheres(
+$db->table('table_name')->remove()->wheresCol(
 	array(
 		['column1','=','value 1'],
 		['column2','=','value 2'],
