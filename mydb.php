@@ -233,9 +233,9 @@ class DB {
 		return $this;
 	}
 	
-	public function delete() {
+	public function remove() {
 		$this->_parts->_whereCondition = true;
-		$this->_parts->_action[0] = "DELETE";
+		$this->_parts->_action[0] = "DELETE FROM";
 		return $this;
 	}
 	
