@@ -111,7 +111,7 @@ class DB {
 		$operators = array('=','>','<','>=','<=','LIKE','REGEXP');
 		if (!EMPTY($array)) {
 			$placeHolders = $this->_setValues($array, $operators);
-			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'AND ' . implode(' AND ', $placeHolders) : implode(' AND ', $placeHolders);
+			$this->_parts->_wheres[] = (count((array) $this->_parts->_wheres))? 'AND ' . implode(' AND ', $placeHolders) : implode(' AND ', $placeHolders);
 		} else {
 			$this->_parts->_wheres[] = '';
 		}
@@ -119,11 +119,10 @@ class DB {
 	}
 	
 	public function whereOrs($array = []) {
-		$w = '';
 		$operators = array('=','>','<','>=','<=','LIKE','REGEXP');
 		if (!EMPTY($array)) {
 			$placeHolders = $this->_setValues($array, $operators);
-			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'OR (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
+			$this->_parts->_wheres[] = (count((array) $this->_parts->_wheres))? 'OR (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
 		} else {
 			$this->_parts->_wheres[] = '';
 		}
@@ -131,7 +130,6 @@ class DB {
 	}
 	
 	public function whereIns($array = []) {
-		$w = '';
 		if (!EMPTY($array)) {
 			foreach ($array as $arr) {
 				if (count($arr) === 2) {
@@ -143,7 +141,7 @@ class DB {
 				}
 			}
 
-			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
+			$this->_parts->_wheres[] = (count((array) $this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
 		} else {
 			$this->_parts->_wheres[] = '';
 		}
@@ -151,7 +149,6 @@ class DB {
 	}
 	
 	public function whereNotIns($array = []) {
-		$w = '';
 		if (!EMPTY($array)) {
 			foreach ($array as $arr) {
 				if (count($arr) === 2) {
@@ -163,7 +160,7 @@ class DB {
 				}
 			}
 
-			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
+			$this->_parts->_wheres[] = (count((array) $this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
 		} else {
 			$this->_parts->_wheres[] = '';
 		}
@@ -171,7 +168,6 @@ class DB {
 	}
 	
 	public function whereBetweens($array = []) {
-		$w = '';
 		if (!EMPTY($array)) {
 			foreach ($array as $arr) {
 				if (count($arr) === 2) {
@@ -181,7 +177,24 @@ class DB {
 					$placeHolders[] = $field . ' BETWEEN  ? AND ?'; 
 				}
 			}
-			$this->_parts->_wheres[] = (count($this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
+			$this->_parts->_wheres[] = (count((array) $this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
+		} else {
+			$this->_parts->_wheres[] = '';
+		}
+		return $this;
+	}
+	
+	public function whereFindInSet($array = []) {
+		if (!EMPTY($array) && is_array($array)) {
+			foreach ($array as $arr) {
+				if (count($arr) === 2) {
+					$field		= $arr[0];
+					$value		= preg_replace('/\s+/', '', $arr[1]);
+					$this->_parts->_values[] = $value;
+					$placeHolders[] = 'FIND_IN_SET (' . $field . ', ?)'; 
+				}
+			}
+			$this->_parts->_wheres[] = (count((array) $this->_parts->_wheres))? 'AND (' . implode(' AND ', $placeHolders) . ')' : implode(' AND ', $placeHolders);
 		} else {
 			$this->_parts->_wheres[] = '';
 		}
