@@ -127,7 +127,15 @@ $db->table('table_name')->select('column2')->whereOrs(
 	)
 )->results();
 ```
+<h3>where FIND_IN_SET</h3>
 
+```html
+$db->table('table_name')->select('column2')->whereFindInSet(
+	array(
+		['column1','value 1,value2,value3']
+	)
+)->results();
+```
 <h3>combine where conditions</h3>
 
 ```html
